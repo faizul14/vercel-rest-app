@@ -1,11 +1,23 @@
 require('dotenv').config()
 const express = require('express');
 const app = express();
+const routerTest = require('./router/routerTest')
+const middleware = require('../src/middleware/middlewareTest')
+
 
 // Get port from environment
 const PORT = process.env.PORT
 
+// Middleware for allow json format
+app.use(express.json())
+// middleware for tracking
+app.use(middleware.middlewareTest)
 
+// Meneruskan ke router test
+app.use('/test', routerTest)
+
+
+// Cek server succes runing
 app.use('/', (req, res) => {
     res.status(200).json({
         message: 'Server succes runnig',
@@ -14,13 +26,7 @@ app.use('/', (req, res) => {
 })
 
 // MiddleWare for catch general error
-app.use((err, req, res, next) => {
-    res.status(500).json({
-        message: `Server error`,
-        code: 500,
-        error: err
-    })
-})
+app.use(middleware.middlewareCatchError)
 
 
 
